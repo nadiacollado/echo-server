@@ -10,7 +10,27 @@ plugins {
     id 'application'
 }
 
+group 'org.example'
+version '1.0-SNAPSHOT'
+
 application {
     mainClassName = 'echoserver.EchoServer'
+}
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    implementation 'org.testng:testng:7.1.0'
+    implementation 'junit:junit:4.13.1'
+    testImplementation 'org.mockito:mockito-core:4.2.0'
+}
+
+test {
+    useJUnitPlatform()
 }
 
