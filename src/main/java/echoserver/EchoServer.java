@@ -16,26 +16,29 @@ public class EchoServer {
 
         try {
             ServerSocketWrapper serverSocketWrapper = new ServerSocketWrapper();
-            ClientSocketWrapper clientSocketWrapper = new ClientSocketWrapper();
-            startEchoServer(serverSocketWrapper, clientSocketWrapper);
+            startEchoServer(serverSocketWrapper);
         } catch (IOException e) {
             System.out.println("Cannot create server socket");
         }
     }
 
-    public static void startEchoServer(ServerSocketWrapper serverSocketWrapper, ClientSocketWrapper clientSocketWrapper) throws IOException {
+    public static void startEchoServer(ServerSocketWrapper serverSocketWrapper) throws IOException {
         try {
             serverSocket = serverSocketWrapper.startServerSocket(port);
             System.out.println("Listening for connection on port " + port);
+            serverSocketWrapper.connectToClient(serverSocket);
+            String clientData;
 
-            while (true) {
-                Socket clientSocket = serverSocketWrapper.connectToClient(serverSocket);
-                clientSocketWrapper.startSocketIO(clientSocket);
+            while ((clientData = serverSocketWrapper.receiveData()) != null) {
+                serverSocketWrapper.sendData(clientData);
+
+                if (serverSocketWrapper.quit(clientData)) {
+                    serverSocketWrapper.close();
+                }
             }
-
+            serverSocketWrapper.close();
         } catch (IOException e) {
             System.out.println("Issue trying to listen on port " + port);
         }
-        serverSocket.close();
     }
 }
