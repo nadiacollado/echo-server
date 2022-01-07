@@ -27,7 +27,7 @@ public class EchoServer {
             ServerSocketWrapper serverSocketWrapper = new ServerSocketWrapper();
             startEchoServer(serverSocketWrapper);
         } catch (IOException e) {
-            System.out.println("Cannot create server socket");
+            System.out.println("Cannot create server socket.");
         }
     }
 

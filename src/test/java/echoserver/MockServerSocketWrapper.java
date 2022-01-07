@@ -6,43 +6,30 @@ import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerSocketWrapperSpy implements SocketWrapper {
+public class MockServerSocketWrapper implements SocketWrapper {
     public BufferedReader input;
     public StringWriter output;
     public String sentData;
-    public int givenPort;
+    public int spyPort;
     public boolean closeCalled = false;
     public boolean startServerSocketCalled = false;
     public boolean connectToClientCalled = false;
+    public boolean quitCalled = false;
 
-    public ServerSocketWrapperSpy(BufferedReader input, StringWriter output) {
+    public MockServerSocketWrapper(BufferedReader input, StringWriter output) {
         this.input = input;
         this.output = output;
     }
 
-    public ServerSocketWrapperSpy(){}
-
-    public ServerSocket startServerSocket(int port) throws IOException {
-        givenPort = port;
+    public ServerSocket startServerSocket(int port) {
+        spyPort = port;
         startServerSocketCalled = true;
         return null;
     }
 
-    public int getPort() {
-        return givenPort;
-    }
-
-    public boolean wasServerSocketStarted() {
-        return startServerSocketCalled;
-    }
-
-    public Socket connectToClient(ServerSocket socket) throws IOException {
+    public Socket connectToClient(ServerSocket socket) {
         connectToClientCalled = true;
         return null;
-    }
-
-    public boolean wasServerSocketConnectedToClient() {
-        return connectToClientCalled;
     }
 
     public String receiveData() {
@@ -59,15 +46,36 @@ public class ServerSocketWrapperSpy implements SocketWrapper {
         sentData = output.toString();
     }
 
-    public boolean quit(String keyword) {
-        return true;
+    public int getPort() {
+        return spyPort;
     }
 
     public String getSentData() {
         return sentData;
     }
 
+    public boolean quit(String keyword) {
+        quitCalled = true;
+        return true;
+    }
+
     public void close() {
         closeCalled = true;
+    }
+
+    public boolean wasServerSocketStarted() {
+        return startServerSocketCalled;
+    }
+
+    public boolean wasServerSocketConnectedToClient() {
+        return connectToClientCalled;
+    }
+
+    public boolean wasQuitCalled() {
+        return quitCalled;
+    }
+
+    public boolean wasServerSocketClosed() {
+        return closeCalled;
     }
 }

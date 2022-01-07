@@ -18,7 +18,7 @@ public class ServerSocketWrapper implements SocketWrapper {
         return serverSocket;
     }
 
-    public Socket connectToClient(ServerSocket serverSocket) throws IOException {
+    public Socket connectToClient(ServerSocket serverSocket) {
         try {
             clientSocket = serverSocket.accept();
             System.out.println("Connection successful");
