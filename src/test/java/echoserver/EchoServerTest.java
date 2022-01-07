@@ -1,45 +1,54 @@
 package echoserver;
 
 import org.junit.jupiter.api.Test;
+import java.io.*;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.ServerSocket;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-
-@RunWith(MockitoJUnitRunner.class)
 class EchoServerTest {
-    @Mock
-    ServerSocket serverSocket;
-    @Mock
-    Socket clientSocket;
-
     @Test
-    void main() {
+    public void testServerSocketIsCreated() throws IOException {
+        StringWriter output = new StringWriter();
+        BufferedReader input = new BufferedReader(new StringReader("test"));
+        ServerSocketWrapperSpy socketWrapperSpy = new ServerSocketWrapperSpy(input, output);
+        EchoServer echoServer = new EchoServer(socketWrapperSpy);
+        echoServer.startEchoServer(socketWrapperSpy);
+
+        assertTrue(socketWrapperSpy.wasServerSocketStarted());
     }
 
-//    @Test
-//    public void testServerSocketIsCreated() throws IOException {
-//        assertNotNull(EchoServer.startServerSocket(8080));
-//    }
-//
-//    @Test
-//    public void testServerSocketIsCreatedWithSpecifiedPort() throws IOException {
-//        int testPort = 7777;
-//        ServerSocket testServerSocket = EchoServer.startServerSocket(testPort);
-//        assertEquals(testServerSocket.getLocalPort(), testPort);
-//    }
-//
-//    @Test
-//    public void testClientSocketIsCreated() throws IOException {
-//        when(serverSocket.accept()).thenReturn(new Socket());
-//        assertNotNull(EchoServer.startClientSocket(serverSocket));
-//    }
+    @Test
+    public void testServerSocketIsCreatedWithCorrectPort() throws IOException {
+        int port = 7777;
+        StringWriter output = new StringWriter();
+        BufferedReader input = new BufferedReader(new StringReader("test"));
+        ServerSocketWrapperSpy socketWrapperSpy = new ServerSocketWrapperSpy(input, output);
+        EchoServer echoServer = new EchoServer(port, socketWrapperSpy);
+        echoServer.startEchoServer(socketWrapperSpy);
 
+        assertEquals(socketWrapperSpy.getPort(), port);
+    }
+
+    @Test
+    public void testServerSocketConnectsToClient() throws IOException {
+        StringWriter output = new StringWriter();
+        BufferedReader input = new BufferedReader(new StringReader("test"));
+        ServerSocketWrapperSpy socketWrapperSpy = new ServerSocketWrapperSpy(input, output);
+        EchoServer echoServer = new EchoServer(socketWrapperSpy);
+        echoServer.startEchoServer(socketWrapperSpy);
+
+        assertTrue(socketWrapperSpy.wasServerSocketConnectedToClient());
+    }
+
+    @Test
+    public void testServerSocketReturnsInputAsOutput() throws IOException {
+        StringWriter output = new StringWriter();
+        BufferedReader input = new BufferedReader(new StringReader("test"));
+        ServerSocketWrapperSpy socketWrapperSpy = new ServerSocketWrapperSpy(input, output);
+        EchoServer echoServer = new EchoServer(socketWrapperSpy);
+        echoServer.startEchoServer(socketWrapperSpy);
+
+        assertEquals("test", socketWrapperSpy.getSentData());
+    }
 }

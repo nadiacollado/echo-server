@@ -4,8 +4,18 @@ import java.io.*;
 import java.net.*;
 
 public class EchoServer {
-    private static int port = 8080;
-    private static ServerSocket serverSocket;
+    static int port = 8080;
+    static SocketWrapper socketWrapper;
+    static ServerSocket serverSocket;
+
+    public EchoServer(int port, SocketWrapper socketWrapper) {
+        this.port = port;
+        this.socketWrapper = socketWrapper;
+    }
+
+    public EchoServer(SocketWrapper socketWrapper) {
+        this.socketWrapper = socketWrapper;
+    }
 
     public static void main(String[] args) throws IOException {
         if (args.length >= 1) {
@@ -13,7 +23,6 @@ public class EchoServer {
         } else {
             System.out.println("Port not provided. Using port 8080.");
         }
-
         try {
             ServerSocketWrapper serverSocketWrapper = new ServerSocketWrapper();
             startEchoServer(serverSocketWrapper);
@@ -22,21 +31,21 @@ public class EchoServer {
         }
     }
 
-    public static void startEchoServer(ServerSocketWrapper serverSocketWrapper) throws IOException {
+    public static void startEchoServer(SocketWrapper socketWrapper) throws IOException {
         try {
-            serverSocket = serverSocketWrapper.startServerSocket(port);
+            serverSocket = socketWrapper.startServerSocket(port);
             System.out.println("Listening for connection on port " + port);
-            serverSocketWrapper.connectToClient(serverSocket);
+            socketWrapper.connectToClient(serverSocket);
             String clientData;
 
-            while ((clientData = serverSocketWrapper.receiveData()) != null) {
-                serverSocketWrapper.sendData(clientData);
+            while ((clientData = socketWrapper.receiveData()) != null) {
+                socketWrapper.sendData(clientData);
 
-                if (serverSocketWrapper.quit(clientData)) {
-                    serverSocketWrapper.close();
+                if (socketWrapper.quit(clientData)) {
+                    socketWrapper.close();
                 }
             }
-            serverSocketWrapper.close();
+            socketWrapper.close();
         } catch (IOException e) {
             System.out.println("Issue trying to listen on port " + port);
         }

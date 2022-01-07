@@ -15,27 +15,31 @@ public class ClientSocketWrapper {
         try {
             clientSocket = new Socket(host, port);
             System.out.println("Client socket created");
+            buildIOStream();
         } catch (IOException e) {
             System.out.println("Client socket not created");
         }
         return clientSocket;
     }
 
-    public static void startSocketIO(Socket socket) throws IOException {
-        clientSocket = socket;
-        manageIOStream(createSocketWriter(socket), createSocketReader(socket));
+    public static void buildIOStream() throws IOException {
+        createSocketWriter(clientSocket);
+        createSocketReader(clientSocket);
     }
 
-    public static void manageIOStream(PrintWriter output, BufferedReader input) throws IOException {
+    public String receiveData() {
         String inputLine;
-        while ((inputLine = readFromInputStream(input)) != null) {
-            if (quit(inputLine)) {
-                close();
-                break;
-            }
-            System.out.println("Echo: " + inputLine);
-            writeToOutputStream(output, inputLine);
+        try {
+            inputLine = readFromInputStream();
+            return inputLine;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    public void sendData(String data) {
+        writeToOutputStream(data);
     }
 
     public static PrintWriter createSocketWriter(Socket clientSocket) throws IOException {
@@ -48,12 +52,15 @@ public class ClientSocketWrapper {
         return input;
     }
 
-    public static String readFromInputStream(BufferedReader input) throws IOException {
+    public static String readFromInputStream() throws IOException {
         return input.readLine();
     }
 
-    public static void writeToOutputStream(PrintWriter output, String data) {
-        output.println("Server output: " + data);
+    public static void writeToOutputStream(String data) {
+        if (!quit(data)) {
+            System.out.println("Client: " + data);
+            output.println("Echo: " + data);
+        }
     }
 
     public static boolean quit(String keyword) {

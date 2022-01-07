@@ -28,11 +28,16 @@ public class EchoClient {
         try {
             clientSocket = clientSocketWrapper.startClientSocket(port, host);
             System.out.println("Connection successful using host " + host + "on " + port);
+            String clientData;
 
-            while (true) {
-                clientSocketWrapper.startSocketIO(clientSocket);
+            while ((clientData = clientSocketWrapper.receiveData()) != null) {
+                clientSocketWrapper.sendData(clientData);
+
+                if (clientSocketWrapper.quit(clientData)) {
+                    clientSocketWrapper.close();
+                }
             }
-
+            clientSocketWrapper.close();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + host);
             System.exit(1);

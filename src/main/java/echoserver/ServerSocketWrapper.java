@@ -10,8 +10,8 @@ import java.net.Socket;
 public class ServerSocketWrapper implements SocketWrapper {
     private BufferedReader input;
     private PrintWriter output;
-    private static Socket clientSocket;
-    private static ServerSocket serverSocket;
+    private Socket clientSocket;
+    private ServerSocket serverSocket;
 
     public ServerSocket startServerSocket(int port) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -49,7 +49,7 @@ public class ServerSocketWrapper implements SocketWrapper {
         writeToOutputStream(data);
     }
 
-    public static boolean quit(String keyword) {
+    public boolean quit(String keyword) {
         keyword = keyword.toLowerCase();
         return (keyword.equals("q") || keyword.equals("quit"));
     }
