@@ -27,7 +27,7 @@ public class EchoClient {
     public static void startEchoClient(ClientSocketWrapper clientSocketWrapper) throws IOException {
         try {
             clientSocket = clientSocketWrapper.startClientSocket(port, host);
-            System.out.println("Connection successful using host " + host + "on " + port);
+            System.out.println("Connection successful using host " + host + " on " + port);
             String clientData;
 
             while ((clientData = clientSocketWrapper.receiveData()) != null) {

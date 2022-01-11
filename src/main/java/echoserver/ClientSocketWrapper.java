@@ -7,9 +7,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientSocketWrapper {
-    private static BufferedReader input;
-    private static PrintWriter output;
-    private static Socket clientSocket;
+    private BufferedReader input;
+    private PrintWriter output;
+    private Socket clientSocket;
 
     public Socket startClientSocket(int port, String host) throws IOException {
         try {
@@ -22,7 +22,7 @@ public class ClientSocketWrapper {
         return clientSocket;
     }
 
-    public static void buildIOStream() throws IOException {
+    public void buildIOStream() throws IOException {
         createSocketWriter(clientSocket);
         createSocketReader(clientSocket);
     }
@@ -42,35 +42,39 @@ public class ClientSocketWrapper {
         writeToOutputStream(data);
     }
 
-    public static PrintWriter createSocketWriter(Socket clientSocket) throws IOException {
-        output = new PrintWriter(clientSocket.getOutputStream(), true);
-        return output;
-    }
-
-    public static BufferedReader createSocketReader(Socket clientSocket) throws IOException {
-        input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        return input;
-    }
-
-    public static String readFromInputStream() throws IOException {
-        return input.readLine();
-    }
-
-    public static void writeToOutputStream(String data) {
-        if (!quit(data)) {
-            System.out.println("Client: " + data);
-            output.println("Echo: " + data);
-        }
-    }
-
-    public static boolean quit(String keyword) {
+    public boolean quit(String keyword) {
         keyword = keyword.toLowerCase();
         return (keyword.equals("q") || keyword.equals("quit"));
     }
 
-    public static void close() throws IOException {
-        input.close();
-        output.close();
-        clientSocket.close();
+    public void close() {
+        try {
+            input.close();
+            output.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private PrintWriter createSocketWriter(Socket clientSocket) throws IOException {
+        output = new PrintWriter(clientSocket.getOutputStream(), true);
+        return output;
+    }
+
+    private BufferedReader createSocketReader(Socket clientSocket) throws IOException {
+        input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        return input;
+    }
+
+    private String readFromInputStream() throws IOException {
+        return input.readLine();
+    }
+
+    private void writeToOutputStream(String data) {
+        if (!quit(data)) {
+            System.out.println("Client: " + data);
+            output.println("Echo: " + data);
+        }
     }
 }

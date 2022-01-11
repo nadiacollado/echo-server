@@ -3,84 +3,85 @@ package echoserver;
 import org.junit.jupiter.api.Test;
 import java.io.*;
 
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class EchoServerTest {
     @Test
-    public void testServerSocketIsCreated() throws IOException {
+    public void testServerSocketIsCreated() {
         StringWriter output = new StringWriter();
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(mockSocketWrapper);
-        echoServer.startEchoServer(mockSocketWrapper);
+        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
+        echoServer.startEchoServer();
 
         assertTrue(mockSocketWrapper.wasServerSocketStarted());
     }
 
     @Test
-    public void testServerSocketIsCreatedWithCorrectPort() throws IOException {
+    public void testServerSocketIsCreatedWithCorrectPort() {
         int port = 7777;
         StringWriter output = new StringWriter();
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
         EchoServer echoServer = new EchoServer(port, mockSocketWrapper);
-        echoServer.startEchoServer(mockSocketWrapper);
+        echoServer.startEchoServer();
 
         assertEquals(mockSocketWrapper.getPort(), port);
     }
 
     @Test
-    public void testServerSocketConnectsToClient() throws IOException {
+    public void testServerSocketConnectsToClient() {
         StringWriter output = new StringWriter();
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(mockSocketWrapper);
-        echoServer.startEchoServer(mockSocketWrapper);
+        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
+        echoServer.startEchoServer();
 
         assertTrue(mockSocketWrapper.wasServerSocketConnectedToClient());
     }
 
     @Test
-    public void testServerSocketEchoesBackInput() throws IOException {
+    public void testServerSocketEchoesBackInput() {
         StringWriter output = new StringWriter();
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(mockSocketWrapper);
-        echoServer.startEchoServer(mockSocketWrapper);
+        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
+        echoServer.startEchoServer();
 
         assertEquals("test", mockSocketWrapper.getSentData());
     }
 
     @Test
-    public void testServerSocketQuitsWithCorrectInput() throws IOException {
+    public void testServerSocketQuitsWithCorrectInput() {
         StringWriter output = new StringWriter();
         BufferedReader input = new BufferedReader(new StringReader("quit"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(mockSocketWrapper);
-        echoServer.startEchoServer(mockSocketWrapper);
+        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
+        echoServer.startEchoServer();
 
         assertTrue(mockSocketWrapper.wasQuitCalled());
     }
 
     @Test
-    public void testServerSocketClosesWhenGivenQuitAsInput() throws IOException {
+    public void testServerSocketClosesWhenGivenQuitAsInput() {
         StringWriter output = new StringWriter();
         BufferedReader input = new BufferedReader(new StringReader("quit"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(mockSocketWrapper);
-        echoServer.startEchoServer(mockSocketWrapper);
+        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
+        echoServer.startEchoServer();
 
         assertTrue(mockSocketWrapper.wasServerSocketClosed());
     }
 
     @Test
-    public void testServerSocketCloses() throws IOException {
+    public void testServerSocketCloses() {
         StringWriter output = new StringWriter();
         BufferedReader input = new BufferedReader(new StringReader("check"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(mockSocketWrapper);
-        echoServer.startEchoServer(mockSocketWrapper);
+        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
+        echoServer.startEchoServer();
 
         assertTrue(mockSocketWrapper.wasServerSocketClosed());
     }
