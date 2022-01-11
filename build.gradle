@@ -10,7 +10,24 @@ plugins {
     id 'application'
 }
 
+group 'org.example'
+version '1.0-SNAPSHOT'
+
 application {
-    mainClassName = 'echoserver.EchoServer'
+    mainClassName = 'echoserver.RunServer'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    implementation 'org.testng:testng:7.1.0'
+    implementation 'junit:junit:4.13.1'
+}
+
+test {
+    useJUnitPlatform()
 }
 
