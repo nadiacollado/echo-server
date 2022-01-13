@@ -1,9 +1,6 @@
 package echoserver;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -15,6 +12,7 @@ public class ServerSocketWrapper implements SocketWrapper {
 
     public ServerSocket startServerSocket(int port) throws IOException {
         serverSocket = new ServerSocket(port);
+        System.out.println("Listening for connection on port " + port);
         return serverSocket;
     }
 
@@ -30,14 +28,14 @@ public class ServerSocketWrapper implements SocketWrapper {
     }
 
     public void buildIOStream() throws IOException {
-        createSocketWriter(clientSocket);
-        createSocketReader(clientSocket);
+        createWriter(clientSocket);
+        createReader(clientSocket);
     }
 
     public String receiveData() {
-        String inputLine;
         try {
-            inputLine = readFromInputStream();
+            String inputLine = readFromInputStream();
+            System.out.println("Client message: " + inputLine);
             return inputLine;
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,11 +45,6 @@ public class ServerSocketWrapper implements SocketWrapper {
 
     public void sendData(String data) {
         writeToOutputStream(data);
-    }
-
-    public boolean quit(String keyword) {
-        keyword = keyword.toLowerCase();
-        return (keyword.equals("q") || keyword.equals("quit"));
     }
 
     public void close() {
@@ -65,11 +58,11 @@ public class ServerSocketWrapper implements SocketWrapper {
         }
     }
 
-    private void createSocketWriter(Socket clientSocket) throws IOException {
+    private void createWriter(Socket clientSocket) throws IOException {
         output = new PrintWriter(clientSocket.getOutputStream(), true);
     }
 
-    private void createSocketReader(Socket clientSocket) throws IOException {
+    private void createReader(Socket clientSocket) throws IOException {
         input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
@@ -78,8 +71,7 @@ public class ServerSocketWrapper implements SocketWrapper {
     }
 
     private void writeToOutputStream(String data) {
-        if (!quit(data)) {
-            System.out.println("Client: " + data);
+        if (!Utils.quit(data)) {
             output.println("Echo: " + data);
         }
     }

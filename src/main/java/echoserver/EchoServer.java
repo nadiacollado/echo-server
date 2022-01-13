@@ -16,14 +16,12 @@ public class EchoServer {
     public void startEchoServer() {
         try {
             serverSocket = socketWrapper.startServerSocket(port);
-            System.out.println("Listening for connection on port " + port);
             socketWrapper.connectToClient(serverSocket);
             String clientData;
 
             while ((clientData = socketWrapper.receiveData()) != null) {
                 socketWrapper.sendData(clientData);
-
-                if (socketWrapper.quit(clientData)) {
+                if (Utils.quit(clientData)) {
                     socketWrapper.close();
                 }
             }

@@ -3,41 +3,29 @@ import java.io.*;
 import java.net.*;
 
 public class EchoClient {
-    private static int port = 8080;
-    private static String host;
-    private static Socket clientSocket;
+    int port;
+    InetAddress host;
+    ClientWrapper socketWrapper;
 
-    public static void main(String[] args) {
-        host = args[0];
-        port = Integer.parseInt(args[1]);
-
-        if (args.length != 2) {
-            System.err.println("Usage: java EchoClient <host name> <port number>");
-            System.exit(1);
-        }
-
-        try {
-            ClientSocketWrapper clientSocketWrapper = new ClientSocketWrapper();
-            startEchoClient(clientSocketWrapper);
-        } catch (IOException e) {
-            System.out.println("Cannot create client socket");
-        }
+    public EchoClient(int port, InetAddress host, ClientWrapper socketWrapper) {
+        this.port = port;
+        this.host = host;
+        this.socketWrapper = socketWrapper;
     }
 
-    public static void startEchoClient(ClientSocketWrapper clientSocketWrapper) throws IOException {
+    public void startEchoClient() {
+        String clientData;
         try {
-            clientSocket = clientSocketWrapper.startClientSocket(port, host);
-            System.out.println("Connection successful using host " + host + " on " + port);
-            String clientData;
-
-            while ((clientData = clientSocketWrapper.receiveData()) != null) {
-                clientSocketWrapper.sendData(clientData);
-
-                if (clientSocketWrapper.quit(clientData)) {
-                    clientSocketWrapper.close();
+            socketWrapper.startClientSocket(host, port);
+            while (true) {
+                while((clientData = socketWrapper.getUserInput()) != null) {
+                    socketWrapper.sendData(clientData);
+                    socketWrapper.receiveData();
+                    if (Utils.quit(clientData)) {
+                        socketWrapper.close();
+                    }
                 }
             }
-            clientSocketWrapper.close();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + host);
             System.exit(1);

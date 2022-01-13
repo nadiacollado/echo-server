@@ -8,6 +8,5 @@ public interface SocketWrapper {
     Socket connectToClient(ServerSocket socket) throws IOException;
     String receiveData();
     void sendData(String data);
-    boolean quit(String data);
     void close();
 }

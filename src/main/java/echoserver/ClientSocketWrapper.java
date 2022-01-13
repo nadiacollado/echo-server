@@ -1,37 +1,45 @@
 package echoserver;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
-public class ClientSocketWrapper {
+public class ClientSocketWrapper implements ClientWrapper {
     private BufferedReader input;
     private PrintWriter output;
-    private Socket clientSocket;
+    private Socket socket;
 
-    public Socket startClientSocket(int port, String host) throws IOException {
+    public Socket startClientSocket(InetAddress host, int port) {
         try {
-            clientSocket = new Socket(host, port);
-            System.out.println("Client socket created");
+            socket = new Socket(host, port);
+            System.out.println("Connection successful using " + host + " on port " + port);
             buildIOStream();
         } catch (IOException e) {
             System.out.println("Client socket not created");
         }
-        return clientSocket;
+        return socket;
     }
 
     public void buildIOStream() throws IOException {
-        createSocketWriter(clientSocket);
-        createSocketReader(clientSocket);
+        createWriter(socket);
+        createReader(socket);
+    }
+
+    public String getUserInput() {
+        BufferedReader userInputReader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            return userInputReader.readLine();
+        } catch (IOException e ) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String receiveData() {
-        String inputLine;
         try {
-            inputLine = readFromInputStream();
-            return inputLine;
+            String echo = readFromInputStream();
+            System.out.println("Echo: " + echo);
+            return echo;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,28 +50,13 @@ public class ClientSocketWrapper {
         writeToOutputStream(data);
     }
 
-    public boolean quit(String keyword) {
-        keyword = keyword.toLowerCase();
-        return (keyword.equals("q") || keyword.equals("quit"));
-    }
-
-    public void close() {
-        try {
-            input.close();
-            output.close();
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private PrintWriter createSocketWriter(Socket clientSocket) throws IOException {
-        output = new PrintWriter(clientSocket.getOutputStream(), true);
+    private PrintWriter createWriter(Socket socket) throws IOException {
+        output = new PrintWriter(socket.getOutputStream(), true);
         return output;
     }
 
-    private BufferedReader createSocketReader(Socket clientSocket) throws IOException {
-        input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    private BufferedReader createReader(Socket socket) throws IOException {
+        input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         return input;
     }
 
@@ -72,9 +65,17 @@ public class ClientSocketWrapper {
     }
 
     private void writeToOutputStream(String data) {
-        if (!quit(data)) {
-            System.out.println("Client: " + data);
-            output.println("Echo: " + data);
+        output.println("Client message: " + data);
+    }
+
+    public void close() {
+        try {
+            input.close();
+            output.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
 }

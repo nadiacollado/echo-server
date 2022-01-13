@@ -23,8 +23,19 @@ repositories {
 
 dependencies {
     implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-    implementation 'org.testng:testng:7.1.0'
     implementation 'junit:junit:4.13.1'
+}
+
+task(runServer, dependsOn: 'classes', type: JavaExec) {
+    mainClass = 'echoserver.RunServer'
+    classpath = sourceSets.main.runtimeClasspath
+    args '8080'
+}
+
+task(runClient, dependsOn: 'classes', type: JavaExec) {
+    mainClass = 'echoserver.RunClient'
+    classpath = sourceSets.main.runtimeClasspath
+    args 'localhost', '8080'
 }
 
 test {

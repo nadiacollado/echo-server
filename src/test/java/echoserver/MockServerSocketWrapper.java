@@ -2,27 +2,26 @@ package echoserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MockServerSocketWrapper implements SocketWrapper {
     public BufferedReader input;
-    public StringWriter output;
+    public PrintWriter output;
     public String sentData;
-    public int spyPort;
+    public int mockPort;
     public boolean closeCalled = false;
     public boolean startServerSocketCalled = false;
     public boolean connectToClientCalled = false;
-    public boolean quitCalled = false;
 
-    public MockServerSocketWrapper(BufferedReader input, StringWriter output) {
+    public MockServerSocketWrapper(BufferedReader input, PrintWriter output) {
         this.input = input;
         this.output = output;
     }
 
     public ServerSocket startServerSocket(int port) {
-        spyPort = port;
+        mockPort = port;
         startServerSocketCalled = true;
         return null;
     }
@@ -43,39 +42,30 @@ public class MockServerSocketWrapper implements SocketWrapper {
 
     public void sendData(String data) {
         output.write(data);
-        sentData = output.toString();
+        sentData = data;
     }
 
     public int getPort() {
-        return spyPort;
+        return mockPort;
     }
 
     public String getSentData() {
         return sentData;
     }
 
-    public boolean quit(String keyword) {
-        quitCalled = true;
-        return true;
-    }
-
     public void close() {
         closeCalled = true;
     }
 
-    public boolean wasServerSocketStarted() {
+    public boolean wasStartServerSocketCalled() {
         return startServerSocketCalled;
     }
 
-    public boolean wasServerSocketConnectedToClient() {
+    public boolean wasConnectToClientCalled() {
         return connectToClientCalled;
     }
 
-    public boolean wasQuitCalled() {
-        return quitCalled;
-    }
-
-    public boolean wasServerSocketClosed() {
+    public boolean wasCloseCalled() {
         return closeCalled;
     }
 }
