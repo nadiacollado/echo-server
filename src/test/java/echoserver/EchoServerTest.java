@@ -1,5 +1,6 @@
 package echoserver;
 
+import echoserver.server.EchoServer;
 import org.junit.jupiter.api.Test;
 import java.io.*;
 
@@ -13,8 +14,8 @@ class EchoServerTest {
         PrintWriter output = new PrintWriter(new StringWriter(), true);
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
-        echoServer.startEchoServer();
+        EchoServer echoServer = new EchoServer(mockSocketWrapper);
+        echoServer.start(8080);
 
         assertTrue(mockSocketWrapper.wasStartServerSocketCalled());
     }
@@ -25,8 +26,8 @@ class EchoServerTest {
         PrintWriter output = new PrintWriter(new StringWriter(), true);
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(port, mockSocketWrapper);
-        echoServer.startEchoServer();
+        EchoServer echoServer = new EchoServer(mockSocketWrapper);
+        echoServer.start(port);
 
         assertEquals(mockSocketWrapper.getPort(), port);
     }
@@ -36,8 +37,8 @@ class EchoServerTest {
         PrintWriter output = new PrintWriter(new StringWriter(), true);
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
-        echoServer.startEchoServer();
+        EchoServer echoServer = new EchoServer(mockSocketWrapper);
+        echoServer.start(8080);
 
         assertTrue(mockSocketWrapper.wasConnectToClientCalled());
     }
@@ -47,8 +48,8 @@ class EchoServerTest {
         PrintWriter output = new PrintWriter(new StringWriter(), true);
         BufferedReader input = new BufferedReader(new StringReader("test"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
-        echoServer.startEchoServer();
+        EchoServer echoServer = new EchoServer(mockSocketWrapper);
+        echoServer.start(8080);
 
         assertEquals("test", mockSocketWrapper.getSentData());
     }
@@ -58,8 +59,8 @@ class EchoServerTest {
         PrintWriter output = new PrintWriter(new StringWriter(), true);
         BufferedReader input = new BufferedReader(new StringReader("quit"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
-        echoServer.startEchoServer();
+        EchoServer echoServer = new EchoServer(mockSocketWrapper);
+        echoServer.start(8080);
 
         assertTrue(mockSocketWrapper.wasCloseCalled());
     }
@@ -69,8 +70,8 @@ class EchoServerTest {
         PrintWriter output = new PrintWriter(new StringWriter(), true);
         BufferedReader input = new BufferedReader(new StringReader("check"));
         MockServerSocketWrapper mockSocketWrapper = new MockServerSocketWrapper(input, output);
-        EchoServer echoServer = new EchoServer(8080, mockSocketWrapper);
-        echoServer.startEchoServer();
+        EchoServer echoServer = new EchoServer(mockSocketWrapper);
+        echoServer.start(8080);
 
         assertTrue(mockSocketWrapper.wasCloseCalled());
     }

@@ -26,14 +26,14 @@ dependencies {
     implementation 'junit:junit:4.13.1'
 }
 
-task(runServer, dependsOn: 'classes', type: JavaExec) {
-    mainClass = 'echoserver.RunServer'
+task(runServer, type: JavaExec) {
+    mainClass = 'echoserver.server.RunServer'
     classpath = sourceSets.main.runtimeClasspath
     args '8080'
 }
 
-task(runClient, dependsOn: 'classes', type: JavaExec) {
-    mainClass = 'echoserver.RunClient'
+task(runClient, type: JavaExec) {
+    mainClass = 'echoserver.client.RunClient'
     classpath = sourceSets.main.runtimeClasspath
     args 'localhost', '8080'
 }

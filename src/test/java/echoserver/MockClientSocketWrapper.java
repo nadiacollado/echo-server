@@ -1,8 +1,9 @@
 package echoserver;
 
+import echoserver.client.ClientWrapper;
+
 import java.io.*;
 import java.net.InetAddress;
-import java.net.Socket;
 
 public class MockClientSocketWrapper implements ClientWrapper {
     public BufferedReader input;
@@ -18,18 +19,17 @@ public class MockClientSocketWrapper implements ClientWrapper {
         this.output = output;
     }
 
-    public Socket startClientSocket(InetAddress host, int port) {
+    public void startClientSocket(InetAddress host, int port) {
         mockPort = port;
         mockHost = host;
         startClientSocketCalled = true;
-        return null;
     }
 
     public String getUserInput() {
         try {
             return input.readLine();
         } catch (IOException e){
-            System.err.println("Error reading user input");
+            Utils.error("Error reading user input", e);
         }
         return null;
     }

@@ -1,21 +1,20 @@
-package echoserver;
+package echoserver.server;
+
+import echoserver.Utils;
 
 import java.io.*;
 import java.net.*;
 
 public class EchoServer {
-    int port;
     SocketWrapper socketWrapper;
-    ServerSocket serverSocket;
 
-    public EchoServer(int port, SocketWrapper socketWrapper) {
-        this.port = port;
+    public EchoServer(SocketWrapper socketWrapper) {
         this.socketWrapper = socketWrapper;
     }
 
-    public void startEchoServer() {
+    public void start(int port) {
         try {
-            serverSocket = socketWrapper.startServerSocket(port);
+            ServerSocket serverSocket = socketWrapper.startServerSocket(port);
             socketWrapper.connectToClient(serverSocket);
             String clientData;
 
@@ -27,7 +26,7 @@ public class EchoServer {
             }
             socketWrapper.close();
         } catch (IOException e) {
-            System.out.println("Issue trying to listen on port " + port);
+            Utils.error(String.format("Issue trying to listen on port %s", port), e);
         }
     }
 }

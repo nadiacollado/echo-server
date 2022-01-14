@@ -1,5 +1,7 @@
 package echoserver;
 
+import echoserver.server.SocketWrapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,7 +37,7 @@ public class MockServerSocketWrapper implements SocketWrapper {
         try {
             return input.readLine();
         } catch (IOException e) {
-            System.err.println("Error");
+            Utils.error("Error reading input", e);
         }
         return null;
     }

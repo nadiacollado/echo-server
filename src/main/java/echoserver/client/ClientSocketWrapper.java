@@ -1,4 +1,6 @@
-package echoserver;
+package echoserver.client;
+
+import echoserver.Utils;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -9,20 +11,19 @@ public class ClientSocketWrapper implements ClientWrapper {
     private PrintWriter output;
     private Socket socket;
 
-    public Socket startClientSocket(InetAddress host, int port) {
+    public void startClientSocket(InetAddress host, int port) {
         try {
             socket = new Socket(host, port);
-            System.out.println("Connection successful using " + host + " on port " + port);
+            Utils.print("Connection successful using " + host + " on port " + port);
             buildIOStream();
         } catch (IOException e) {
-            System.out.println("Client socket not created");
+            Utils.error("Could not create client socket ", e);
         }
-        return socket;
     }
 
     public void buildIOStream() throws IOException {
-        createWriter(socket);
-        createReader(socket);
+        createWriter();
+        createReader();
     }
 
     public String getUserInput() {
@@ -37,7 +38,7 @@ public class ClientSocketWrapper implements ClientWrapper {
 
     public String receiveData() {
         try {
-            String echo = readFromInputStream();
+            String echo = input.readLine();
             System.out.println("Echo: " + echo);
             return echo;
         } catch (IOException e) {
@@ -47,25 +48,15 @@ public class ClientSocketWrapper implements ClientWrapper {
     }
 
     public void sendData(String data) {
-        writeToOutputStream(data);
+        output.println(data);
     }
 
-    private PrintWriter createWriter(Socket socket) throws IOException {
+    private void createWriter() throws IOException {
         output = new PrintWriter(socket.getOutputStream(), true);
-        return output;
     }
 
-    private BufferedReader createReader(Socket socket) throws IOException {
+    private void createReader() throws IOException {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        return input;
-    }
-
-    private String readFromInputStream() throws IOException {
-        return input.readLine();
-    }
-
-    private void writeToOutputStream(String data) {
-        output.println("Client message: " + data);
     }
 
     public void close() {
