@@ -1,4 +1,4 @@
-package echoserver;
+package echoserver.server;
 
 import java.io.IOException;
 import java.net.*;
@@ -8,6 +8,5 @@ public interface SocketWrapper {
     Socket connectToClient(ServerSocket socket) throws IOException;
     String receiveData();
     void sendData(String data);
-    boolean quit(String data);
-    void close();
+    void close() throws IOException;
 }

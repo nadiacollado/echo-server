@@ -10,19 +10,33 @@ Change into the root directory.
 
 `cd http-server`
 
-Start the server by running the following command:
+Start the server by running either of the following commands: 
 
-`gradle run`
+Connect to port 8080 automatically:
 
-This will automatically connect to Port 8080. If you would like to use a different port, use this command: 
+`./gradlew runServer`
 
-`gradle run --args <port-number>`
+Connects to given port:
 
-To run the client, use the following Netcat command:
+`./gradlew runServer --args <port-number>`
 
-`nc <IP-address> <port-number>`
+To run the client, you can use any of the following commands (in a separate terminal):
 
+Connects to localhost and port 8080 automatically:
 
+`./gradlew runClient`
+
+Connects to given host and port:
+
+`./gradlew runClient --args="<host-name> <port-number>"`
+
+Using Netcat:
+
+`nc <host-name> <port-number>`
+
+To run tests:
+
+`./gradlew test`
 
 
 
