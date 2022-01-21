@@ -11,21 +11,19 @@ public class EchoClient {
         this.socketWrapper = socketWrapper;
     }
 
-    public void start(InetAddress host, int port) throws IOException {
+    public void start(InetAddress host, int port) {
         try {
             socketWrapper.startClientSocket(host, port);
-            while (true) {
-                String clientData;
-                while((clientData = socketWrapper.getUserInput()) != null) {
-                    if (Utils.quit(clientData)) {
-                        Utils.print("Closing connection");
-                        socketWrapper.close();
-                    }
-                    socketWrapper.sendData(clientData);
-                    socketWrapper.receiveData();
+            String clientData;
+            while((clientData = socketWrapper.getUserInput()) != null) {
+                if (Utils.quit(clientData)) {
+                    Utils.print("Closing connection");
+                    socketWrapper.close();
                 }
-                socketWrapper.close();
+                socketWrapper.sendData(clientData);
+                socketWrapper.receiveData();
             }
+            socketWrapper.close();
         } catch (UnknownHostException e) {
             Utils.error(String.format("Don't know about host %s ", host), e);
         } catch (IOException e) {

@@ -19,10 +19,10 @@ public class EchoServer {
             String clientData;
 
             while ((clientData = socketWrapper.receiveData()) != null) {
-                socketWrapper.sendData(clientData);
                 if (Utils.quit(clientData)) {
                     socketWrapper.close();
                 }
+                socketWrapper.sendData(clientData);
             }
             socketWrapper.close();
         } catch (IOException e) {

@@ -32,9 +32,10 @@ task(runServer, type: JavaExec) {
     args '8080'
 }
 
-task(runClient, type: JavaExec) {
+task(runClient, dependsOn: classes, type: JavaExec) {
     mainClass = 'echoserver.client.RunClient'
     classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
     args 'localhost', '8080'
 }
 

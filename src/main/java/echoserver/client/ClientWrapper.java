@@ -8,5 +8,5 @@ public interface ClientWrapper {
     String getUserInput() throws IOException;
     String receiveData();
     void sendData(String data);
-    void close();
+    void close() throws IOException;
 }

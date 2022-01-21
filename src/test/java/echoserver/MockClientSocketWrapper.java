@@ -5,7 +5,7 @@ import echoserver.client.ClientWrapper;
 import java.io.*;
 import java.net.InetAddress;
 
-public class MockClientSocketWrapper implements ClientWrapper {
+public class MockClientSocketWrapper implements ClientWrapper  {
     public BufferedReader input;
     public PrintWriter output;
     public String sentData;

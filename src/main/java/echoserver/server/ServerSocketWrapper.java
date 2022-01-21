@@ -46,20 +46,14 @@ public class ServerSocketWrapper implements SocketWrapper {
     }
 
     public void sendData(String data) {
-        if (!Utils.quit(data)) {
-            output.println(data);
-        }
+        output.println(data);
     }
 
-    public void close() {
-        try {
-            input.close();
-            output.close();
-            clientSocket.close();
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void close() throws IOException {
+        input.close();
+        output.close();
+        clientSocket.close();
+        serverSocket.close();
     }
 
     private void createWriter() throws IOException {

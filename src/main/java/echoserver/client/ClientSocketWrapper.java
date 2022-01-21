@@ -39,7 +39,7 @@ public class ClientSocketWrapper implements ClientWrapper {
     public String receiveData() {
         try {
             String echo = input.readLine();
-            System.out.println("Echo: " + echo);
+            Utils.print("Echo: " + echo);
             return echo;
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,6 +51,12 @@ public class ClientSocketWrapper implements ClientWrapper {
         output.println(data);
     }
 
+    public void close() throws IOException {
+        input.close();
+        output.close();
+        socket.close();
+    }
+
     private void createWriter() throws IOException {
         output = new PrintWriter(socket.getOutputStream(), true);
     }
@@ -58,15 +64,4 @@ public class ClientSocketWrapper implements ClientWrapper {
     private void createReader() throws IOException {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
-
-    public void close() {
-        try {
-            input.close();
-            output.close();
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
